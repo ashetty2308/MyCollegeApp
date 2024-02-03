@@ -44,7 +44,21 @@ public class ScheduleIntent extends AppCompatActivity {
                     intent.putExtra("courseName", courseName);
                 } else {
                     Bundle bundle = getIntent().getExtras();
-                    intent.putExtra("data", bundle.getString("original_course"));
+                    intent.putExtra("cn", bundle.getString("og_class_name"));
+                }
+
+                if (!courseTime.isEmpty()) {
+                    intent.putExtra("courseTime", courseTime);
+                } else {
+                    Bundle bundle = getIntent().getExtras();
+                    intent.putExtra("ct", bundle.getString("og_class_time"));
+                }
+
+                if (!courseInstructor.isEmpty()) {
+                    intent.putExtra("courseInstructor", courseInstructor);
+                } else {
+                    Bundle bundle = getIntent().getExtras();
+                    intent.putExtra("ci", bundle.getString("og_class_instructor"));
                 }
                 setResult(Activity.RESULT_OK, intent);
                 finish();

@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +47,8 @@ public class ScheduleFragment extends Fragment {
     String item;
     int itemCounter;
     String userInputtedCourseName;
+    String userInputtedCourseTitle;
+    String userInputtedCourseInstructor;
 
 
     public ScheduleFragment() {
@@ -82,77 +86,125 @@ public class ScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        RecyclerView recyclerView;
+        MyAdapter adapter;
+        RecyclerView.LayoutManager layoutManager;
+
+
+        ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
-        ListView listView = view.findViewById(R.id.listViewId);
-        Button addButton = view.findViewById(R.id.addBtn);
-        Button updateButton = view.findViewById(R.id.updateBtn);
-        EditText userText = view.findViewById(R.id.editTextId);
-        ArrayList<String> toDoList = new ArrayList<String>();
+        recyclerView = view.findViewById(R.id.rvId);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getActivity());
+        adapter = new MyAdapter(scheduleList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toDoList);
-        listView.setAdapter(adapter);
 
+////        ListView listView = view.findViewById(R.id.listViewId);
+//        Button addButton = view.findViewById(R.id.addBtn);
+//        Button updateButton = view.findViewById(R.id.updateBtn);
+//        EditText userText = view.findViewById(R.id.editTextId);
+//        ArrayList<String> toDoList = new ArrayList<String>();
+//
+////        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toDoList);
+////        listView.setAdapter(adapter);
+//
         ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
+
                     public void onActivityResult(ActivityResult result) {
+                        Log.d("userInput", "WE EVEN HERE?!?!?!");
+
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             userInputtedCourseName = result.getData().getStringExtra("courseName");
-                            toDoList.set(itemCounter, userInputtedCourseName);
+                            userInputtedCourseTitle = result.getData().getStringExtra("courseTime");
+                            userInputtedCourseInstructor = result.getData().getStringExtra("courseInstructor");
+                            scheduleList.set(itemCounter, new ScheduleItem(userInputtedCourseName, userInputtedCourseTitle, userInputtedCourseInstructor));
                             adapter.notifyDataSetChanged();
                         }
                     }
         });
-
-
-        addButton.setOnClickListener(new View.OnClickListener() {
+        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                String userInput = String.valueOf(userText.getText());
-                toDoList.add(userInput);
-                adapter.notifyDataSetChanged();
-                userText.getText().clear();
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                item = String.valueOf(parent.getItemAtPosition(position));
-                Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
-                index = position;
-            }
-        });
-
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userInput = String.valueOf(userText.getText());
-                toDoList.set(index, userInput);
-                adapter.notifyDataSetChanged();
-                userText.getText().clear();
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                item = String.valueOf(parent.getItemAtPosition(position));
-                Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
-                toDoList.remove(position);
-                adapter.notifyDataSetChanged();
-                return true;
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), ScheduleIntent.class);
-                intent.putExtra("original_course", toDoList.get(position));
-                itemCounter = position;
+                intent.putExtra("og_class_name", scheduleList.get(position).getClassName());
+                intent.putExtra("og_class_time", scheduleList.get(position).getClassTime());
+                intent.putExtra("og_class_instructor", scheduleList.get(position).getClassInstructor());
+//                startActivity(intent);
                 mStartForResult.launch(intent);
+
             }
         });
+
+//
+//
+//        addButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String userInput = String.valueOf(userText.getText());
+//                toDoList.add(userInput);
+//                adapter.notifyDataSetChanged();
+//                userText.getText().clear();
+//            }
+//        });
+//
+//        scheduleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                item = String.valueOf(parent.getItemAtPosition(position));
+//                Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
+//                index = position;
+//            }
+//        });
+//
+//        updateButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String userInput = String.valueOf(userText.getText());
+//                toDoList.set(index, userInput);
+//                adapter.notifyDataSetChanged();
+//                userText.getText().clear();
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                item = String.valueOf(parent.getItemAtPosition(position));
+//                Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
+//                toDoList.remove(position);
+//                adapter.notifyDataSetChanged();
+//                return true;
+//            }
+//        });
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getActivity(), ScheduleIntent.class);
+//                intent.putExtra("original_course", toDoList.get(position));
+//                itemCounter = position;
+//                mStartForResult.launch(intent);
+//            }
+//        });
         return view;
     }
 }
