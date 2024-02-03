@@ -1,9 +1,18 @@
 package com.example.mycollegeapp;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +43,8 @@ public class ScheduleFragment extends Fragment {
 
     Integer index;
     String item;
+    int itemCounter;
+    String userInputtedCourseName;
 
 
     public ScheduleFragment() {
@@ -77,15 +88,21 @@ public class ScheduleFragment extends Fragment {
         Button updateButton = view.findViewById(R.id.updateBtn);
         EditText userText = view.findViewById(R.id.editTextId);
         ArrayList<String> toDoList = new ArrayList<String>();
-        toDoList.add("schedule!!!");
-        toDoList.add("schedule!!!");
-        toDoList.add("schedule!!!");
-        toDoList.add("schedule!!!");
-        toDoList.add("schedule!!!");
-        toDoList.add("schedule!!!");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toDoList);
         listView.setAdapter(adapter);
+
+        ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            userInputtedCourseName = result.getData().getStringExtra("courseName");
+                            toDoList.set(itemCounter, userInputtedCourseName);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+        });
+
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,12 +147,12 @@ public class ScheduleFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getActivity(), ScheduleIntent.class);
+                intent.putExtra("original_course", toDoList.get(position));
+                itemCounter = position;
+                mStartForResult.launch(intent);
             }
         });
-
-
-
         return view;
     }
 }

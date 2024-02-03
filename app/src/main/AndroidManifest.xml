@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MyCollegeApp"
         tools:targetApi="31">
         <activity
+            android:name=".ScheduleIntent"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

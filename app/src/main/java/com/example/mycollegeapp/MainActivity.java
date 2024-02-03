@@ -26,19 +26,19 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
                 switch (item.getItemId()) {
-                    case 2131231221:
+                    case R.id.id_schedule:
                         // schedule
                         fragment = new ScheduleFragment();
                         break;
-                    case 2131231219:
+                    case R.id.id_assignments:
                         // assignments
                         fragment = new AssignmentsFragment();
                         break;
-                    case 2131231220:
+                    case R.id.id_exams:
                         // exams
                         fragment = new ExamFragment();
                         break;
-                    case 2131231222:
+                    case R.id.id_todo:
                         // todo list
                         fragment = new TodoFragment();
                         break;
@@ -47,6 +47,5 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 }
