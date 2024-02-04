@@ -1,5 +1,7 @@
 package com.example.mycollegeapp;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +10,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,12 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -95,18 +93,18 @@ public class ScheduleFragment extends Fragment {
         ArrayList<ScheduleItem> scheduleList = new ArrayList<>();
         scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
         scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
-        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
+//        scheduleList.add(new ScheduleItem("CS 2340","T/Th 12:30-1:45", "Dr. Pedro"));
 
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         recyclerView = view.findViewById(R.id.rvId);
@@ -118,9 +116,12 @@ public class ScheduleFragment extends Fragment {
 
 
 ////        ListView listView = view.findViewById(R.id.listViewId);
-//        Button addButton = view.findViewById(R.id.addBtn);
+        Button addButton = view.findViewById(R.id.addBtn);
 //        Button updateButton = view.findViewById(R.id.updateBtn);
-//        EditText userText = view.findViewById(R.id.editTextId);
+        EditText userText1 = view.findViewById(R.id.courseNameId);
+        EditText userText2 = view.findViewById(R.id.courseTimeInputId);
+        EditText userText3 = view.findViewById(R.id.courseInstructorId);
+
 //        ArrayList<String> toDoList = new ArrayList<String>();
 //
 ////        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toDoList);
@@ -133,10 +134,16 @@ public class ScheduleFragment extends Fragment {
                         Log.d("userInput", "WE EVEN HERE?!?!?!");
 
                         if (result.getResultCode() == Activity.RESULT_OK) {
+                            Log.d("word up", "HOLA");
+
                             userInputtedCourseName = result.getData().getStringExtra("courseName");
                             userInputtedCourseTitle = result.getData().getStringExtra("courseTime");
                             userInputtedCourseInstructor = result.getData().getStringExtra("courseInstructor");
-                            scheduleList.set(itemCounter, new ScheduleItem(userInputtedCourseName, userInputtedCourseTitle, userInputtedCourseInstructor));
+                            if (userInputtedCourseName.length() == 0 && userInputtedCourseTitle.length() == 0 && userInputtedCourseInstructor.length() == 0) {
+                                scheduleList.remove(itemCounter);
+                            } else {
+                                scheduleList.set(itemCounter, new ScheduleItem(userInputtedCourseName, userInputtedCourseTitle, userInputtedCourseInstructor));
+                            }
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -145,26 +152,29 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(getActivity(), ScheduleIntent.class);
-                intent.putExtra("og_class_name", scheduleList.get(position).getClassName());
-                intent.putExtra("og_class_time", scheduleList.get(position).getClassTime());
-                intent.putExtra("og_class_instructor", scheduleList.get(position).getClassInstructor());
-//                startActivity(intent);
+//                intent.putExtra("og_class_name", scheduleList.get(position).getClassName());
+//                intent.putExtra("og_class_time", scheduleList.get(position).getClassTime());
+//                intent.putExtra("og_class_instructor", scheduleList.get(position).getClassInstructor());
+                itemCounter = position;
                 mStartForResult.launch(intent);
 
             }
         });
 
-//
-//
-//        addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String userInput = String.valueOf(userText.getText());
-//                toDoList.add(userInput);
-//                adapter.notifyDataSetChanged();
-//                userText.getText().clear();
-//            }
-//        });
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userInput1 = String.valueOf(userText1.getText());
+                String userInput2 = String.valueOf(userText2.getText());
+                String userInput3 = String.valueOf(userText3.getText());
+
+                scheduleList.add(new ScheduleItem(userInput1, userInput2, userInput3));
+                adapter.notifyDataSetChanged();
+                userText1.getText().clear();
+                userText2.getText().clear();
+                userText3.getText().clear();
+            }
+        });
 //
 //        scheduleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +74,7 @@ public class TodoFragment extends Fragment {
         ListView listView = view.findViewById(R.id.listViewId);
         Button addButton = view.findViewById(R.id.addBtn);
         Button updateButton = view.findViewById(R.id.updateBtn);
-        EditText userText = view.findViewById(R.id.editTextId);
+        EditText userText = view.findViewById(R.id.courseNameId);
 
         ArrayList<String> toDoList = new ArrayList<String>();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, toDoList);
