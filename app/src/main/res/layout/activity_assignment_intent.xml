@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ScheduleIntent">
+    tools:context=".AssignmentsIntent">
 
     <EditText
         android:id="@+id/courseNameInputId"
@@ -49,7 +49,7 @@
         android:id="@+id/titleTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course Name"
+        android:text="Title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/courseNameInputId"
         app:layout_constraintHorizontal_bias="0.305"
@@ -61,7 +61,7 @@
         android:id="@+id/dueDateTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course Time"
+        android:text="Due Date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/courseTimeInputId"
         app:layout_constraintHorizontal_bias="0.312"
@@ -73,7 +73,7 @@
         android:id="@+id/classTextId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Instructor"
+        android:text="Class"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/instructorInputId"
         app:layout_constraintHorizontal_bias="0.297"
